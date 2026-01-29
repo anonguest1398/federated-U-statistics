@@ -51,32 +51,21 @@ def communication_mse_per_party(
     ax1.grid()
 
     dic = {}
-    comm = {}
     for s in schemes:
         dic[s] = []
-        comm[s] = []
 
-    for (n, bins), d in df.groupby(["n", "bins"]):
+    for (_, bins), d in df.groupby(["n", "bins"]):
         for s in schemes:
             if d[s].any() != math.inf:
                 dic[s].append(d[s].mean())
-            if s == "o_balanced":
-                m = Umpc_comm(n, alpha, nbits, kernel="gini")
-            elif s == "bell":
-                m = Bell_comm(n, bins, nbits)
-            elif s == "ghazi":
-                m = Ghazi_comm(n, bins, nbits, eps)
-            elif s == "ghazi_shuffle":
-                m = GhaziSM_comm(n, bins, nbits, eps)
-            comm[s].append(m)
 
     for s, tupl in schemes.items():
-        ax2.plot(comm[s], dic[s], tupl[2], label=f"$\mathsf{{tupl[0]}}$", color=f"tab:{tupl[1]}")
+        ax2.plot(n_parties, dic[s], tupl[2], label=f"$\mathsf{{tupl[0]}}$", color=f"tab:{tupl[1]}")
 
     ax2.set_yscale("log")
     ax2.set_xscale("log")
     ax2.set_title(r"MSE")
-    ax2.set_xlabel("Communication cost (bits)")
+    ax2.set_xlabel("Number of parties")
     ax2.set_ylabel("MSE")
     ax2.grid()
 
@@ -213,62 +202,6 @@ def communication_server_computation(
     plt.tight_layout(rect=[0, 0.1, 1, 1])  # leave space at bottom
     plt.show()
 
-def sampling_methods(
-    infile="results/duplicate.txt"
-):
-    """
-    Figure 7 of the paper
-    
-    :param str infile: File containing MSEs
-    """
-
-    df = pd.read_csv(infile, sep='\t')
-    schemes = {"bal1": ("Balanced $\epsilon=1$", "blue", "o"), 
-               "bal5": ("Balanced $\epsilon=5$", "cyan", "|"), 
-               "wo1":("Uniform $\epsilon=1$", "green", "s"), 
-               "wo5": ("Uniform $\epsilon=5$", "olive", "_"), 
-               "bern1": ("Bernoulli $\epsilon=1$", "red", "x"), 
-               "bern5": ("Bernoulli $\epsilon=5$", "pink", "d")
-               }
-
-    ratios = df["ratio"].unique()
-    n = df["n"].unique()[0]
-    ts = [ratio * math.comb(n, 2) for ratio in ratios]
-
-    dic = {}
-    errors = {}
-
-    selected_schemes = {"bal1": schemes["bal1"],
-                        "wo1": schemes["wo1"],
-                        "bern1": schemes["bern1"]}
-
-    for s in selected_schemes:
-        dic[s] = []
-        errors[s] = []
-
-    for _, d in df.groupby(["ratio"]):
-        for s in selected_schemes:
-            mean = d[s].mean()
-            var = d[s].var()
-            dic[s].append(mean)
-            errors[s].append(( (1.96 * math.sqrt(var))/math.sqrt(len(d[s]))))
-
-
-    for s, tupl in selected_schemes.items():
-        plt.errorbar(ts, dic[s], marker=tupl[2], yerr=errors[s], label=f"{tupl[0]}", color=f"tab:{tupl[1]}")
-        plt.fill_between(ts, 
-                         list(map(lambda x, y: x - y, dic[s], errors[s])), 
-                         list(map(lambda x, y: x + y, dic[s], errors[s])), 
-                         alpha=0.2, color=f"tab:{tupl[1]}")
-
-    plt.yscale("log")
-    plt.grid()
-    plt.title(r"MSE comparison over the size of $E$, $n = 4521$")
-    plt.xlabel(r"$|E|$")
-    plt.ylabel("MSE")
-    plt.legend()
-
-    plt.show()
 
 def mse_mse_vs_comm(
         infile="results/kendall.txt",

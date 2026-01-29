@@ -16,7 +16,7 @@ def fss_keys(n, alpha, nbits, security_lambda=128) -> int:
     p = int(n * alpha)
     return security_lambda * nbits * n * p
 
-def Umpc_comm(n, alpha, nbits, kernel="gini") -> int:
+def Umpc_comm(n, alpha=None, nbits=40, kernel="gini") -> int:
     """
     Returns the number of bits necessary to complete the Umpc protocol
     by using Protocol B.1 for Noise generation
