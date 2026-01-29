@@ -13,7 +13,10 @@ def fss_keys(n, alpha, nbits, security_lambda=128) -> int:
 
     :returns: int result: Number of bits
     """
-    p = int(n * alpha)
+    if alpha == None:
+        p = 2
+    else:
+        p = int(n * alpha)
     return security_lambda * nbits * n * p
 
 def Umpc_comm(n, alpha=None, nbits=40, kernel="gini") -> int:
@@ -33,8 +36,11 @@ def Umpc_comm(n, alpha=None, nbits=40, kernel="gini") -> int:
     # - the Sharing Phase (alpha * n^2),
     # - the Aggregation phase (n * nbits),
     # - the Noise addition phase (nbits * n^2) implemented via the Protocol B.1
-    neigh = int(alpha * n)
-    bits = (neigh * n + n) * nbits + nbits * n**2 
+    if alpha == None:
+        neigh = 2
+    else:  
+        neigh = int(alpha * n)
+    bits = (neigh * n + n) * nbits + nbits * n
 
     if kernel == "gini":
         # For Gini Mean Difference, 1 product, 1 comparisons = 3 opens

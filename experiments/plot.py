@@ -12,7 +12,7 @@ def communication_mse_per_party(
         bins=256,
         eps=1,
         nbits=40,
-        alpha=0.02
+        alpha=None
         ) -> None:
     """
     Figure 3 of the paper
@@ -292,4 +292,4 @@ def mse_mse_vs_comm(
 
 
 if __name__ == "__main__":
-    mse_mse_vs_comm()
+    communication_mse_per_party()
