@@ -147,7 +147,7 @@ def ours_wo_repl(n: int, size_e: int, data, epsilon: float, funct, l=40, c=14) -
 
     noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
 
-    return invert(res / size_e + noise, c)
+    return invert(res + noise, c) / size_e
 
 
 
@@ -187,7 +187,7 @@ def ours_bernoulli(n: int, alpha: float, data, epsilon: float, funct, l=40, c=14
 
     noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
 
-    return invert(res / cpt + noise, c)
+    return invert(res + noise, c) / cpt
 
 def convert(x: float, c: int, l=40) -> int:
     """
