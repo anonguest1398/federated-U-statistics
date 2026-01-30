@@ -69,10 +69,15 @@ def ours_balanced(n: int, size_E: int, data, epsilon: float, funct, l=40, c=14, 
     """
     tuples = balanced_sample(n, size_E)
 
+    # To compute \delta_G^{max}
+    max_table = np.zeros(n)
+
     if secret_shared == False:
         res = 0
 
         for (i, j) in tuples:
+            max_table[i] += 1
+            max_table[j] += 1
             # For ease of conversion, let us write 
             # A) Convert(f(x_i, x_j)),
             # B) f(Convert(x_i), Convert(x_j)).
@@ -80,21 +85,24 @@ def ours_balanced(n: int, size_E: int, data, epsilon: float, funct, l=40, c=14, 
             # B outputs 1 while A outputs 2**c in Z_^{2^l}. 
             res += convert(funct(data[i], data[j]), c)
 
-        noise = convert(np.random.laplace(0, 2 / (epsilon * n)), c)
+        noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
         return invert(res / size_E + noise, c)
 
     shares = np.zeros(n)
 
     for (i, j) in tuples:
+        max_table[i] += 1
+        max_table[j] += 1
+
         r = convert(funct(data[i], data[j]), c)
         sh0, sh1 = share(r, 2, 2**l)
         shares[i] = (shares[i] + sh0) % 2**l
         shares[j] = (shares[j] + sh1) % 2**l 
     
-    noise_b = np.random.laplace(0, 2 / (epsilon * n))
+    noise_b = np.random.laplace(0, max(max_table) / epsilon )
     noise = convert(noise_b, c)
 
-    noise_shares = np.array(share(noise, n, 2**l)) * size_E
+    noise_shares = np.array(share(noise, n, 2**l))
 
     res = reconstruct( (shares +  noise_shares), 2**l)
     return invert(res / size_E, c)
@@ -122,15 +130,22 @@ def ours_wo_repl(n: int, size_e: int, data, epsilon: float, funct, l=40, c=14) -
     r = range(n)
     res = 0
     cpt = 0
+
+    # To compute \delta_G^{max}
+    max_table = np.zeros(n)
+
     tuples = random.choices(list(combinations(r, 2)), k = size_e)
     for (i, j) in tuples:
         res += convert(funct(data[i], data[j]), c)
         cpt += 1
 
+        max_table[i] += 1
+        max_table[j] += 1
+
         if cpt > size_e:
             break
 
-    noise = convert(np.random.laplace(0, 2/(epsilon * n )), c)
+    noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
 
     return invert(res / size_e + noise, c)
 
@@ -155,19 +170,24 @@ def ours_bernoulli(n: int, alpha: float, data, epsilon: float, funct, l=40, c=14
     """
 
     comb = combinations([i for i in range(0,n)], 2)
-    graph = []
-    for tupl in comb:
+    res = 0
+    cpt = 0
+
+    # To compute \delta_G^{max}
+    max_table = np.zeros(n)
+
+    for (i, j) in comb:
         r = random.random()
         if r < alpha:
-            graph.append(tupl)
+            cpt =+ 1
+            res += convert(funct(data[i], data[j]), c)
 
-    res = 0
-    for (i, j) in graph:
-        res += convert(funct(data[i], data[j]), c)
+            max_table[i] += 1
+            max_table[j] += 1
 
-    noise = convert(np.random.laplace(0, 2/ (epsilon * n )), c)
+    noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
 
-    return invert(res / len(graph) + noise, c)
+    return invert(res / cpt + noise, c)
 
 def convert(x: float, c: int, l=40) -> int:
     """
