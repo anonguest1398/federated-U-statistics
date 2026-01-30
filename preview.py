@@ -18,7 +18,7 @@ def main(
         n=100,
         epsilon=1.0,
         bins=128,
-        alpha=0.02,
+        p=5,
         nbits=20,
         c=8,
         dataset=None,
@@ -44,7 +44,7 @@ def main(
         b = bell_method(n, bins, data, r, epsilon, funct)
         gh, L, R, m, l = ghazi(n, epsilon, data, r, bins, funct)
         gh_shuffle = ghazi_shuffle(n, epsilon, data, bins, L, R, m, l)
-        our20 = ours_balanced(n, int(alpha * comb(n, 2)), data, epsilon, funct, l=nbits, c=c)
+        our20 = ours_balanced(n, n*p, data, epsilon, funct, l=nbits, c=c)
 
         mse_umpc = (real - our20)**2
         mse_ghazi = (real - gh)**2
@@ -59,8 +59,8 @@ def main(
     
     header = ["Protocol", "MSE", "Communication", "Party computation", "Server computation"]
 
-    sum_umpc = ["Umpc", sum(umpc) / nb_tests, Umpc_comm(n, alpha, nbits, kernel), 
-         Umpc_comp(n, alpha, nbits, kernel), Umpc_serv_comp(n)]
+    sum_umpc = ["Umpc", sum(umpc) / nb_tests, Umpc_comm(n, p, nbits, kernel), 
+         Umpc_comp(n, p, nbits, kernel), Umpc_serv_comp(n)]
     sum_ghazi = ["Ghazi",  sum(g) / nb_tests, Ghazi_comm(n, bins, nbits, epsilon), 
          Ghazi_comp(n, bins, epsilon), Ghazi_serv_comp(n, bins, epsilon)]
     sum_ghazism = ["GhaziSM",  sum(g_sm) / nb_tests, GhaziSM_comm(n, bins, nbits, epsilon), 
@@ -103,11 +103,11 @@ if __name__ == "__main__":
         help="Number of bins for the protocols Ghazi and Bell.",
     )
     parser.add_argument(
-        "-a",
-        "--alpha",
-        type=float,
-        default=0.02,
-        help="Fraction of neighbors per party for the protocol Umpc.",
+        "-p",
+        "--p",
+        type=int,
+        default=5,
+        help="Number of neighbors per party for the protocol Umpc.",
     )
     parser.add_argument(
         "-nbits",
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         n=args.n,
         epsilon=args.epsilon,
         bins=args.bins,
-        alpha=args.alpha,
+        p=args.p,
         nbits=args.nbits,
         c=args.c,
         dataset=args.dataset,

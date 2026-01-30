@@ -86,7 +86,7 @@ def ours_balanced(n: int, size_E: int, data, epsilon: float, funct, l=40, c=14, 
             res += convert(funct(data[i], data[j]), c)
 
         noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
-        return invert(res / size_E + noise, c)
+        return invert(res + noise, c) / size_E
 
     shares = np.zeros(n)
 
@@ -105,7 +105,7 @@ def ours_balanced(n: int, size_E: int, data, epsilon: float, funct, l=40, c=14, 
     noise_shares = np.array(share(noise, n, 2**l))
 
     res = reconstruct( (shares +  noise_shares), 2**l)
-    return invert(res / size_E, c)
+    return invert(res, c) / size_E
 
 
 

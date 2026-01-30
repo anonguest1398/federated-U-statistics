@@ -32,8 +32,8 @@ options:
   -e EPSILON, --epsilon EPSILON
                         Epsilon for differential privacy.
   -b BINS, --bins BINS  Number of bins for the protocols Ghazi and Bell.
-  -a ALPHA, --alpha ALPHA
-                        Fraction of neighbors per party for the protocol Umpc.
+  -a P, --p P
+                        Number of neighbors per party for the protocol Umpc.
   -nbits NBITS, --nbits NBITS
                         Number of bits to represent one element of X.
   -c C, --c C
@@ -48,7 +48,7 @@ options:
 
 All arguments are optional and default to:
 ```bash
-python3 preview.py -n 100 -e 1.0 -b 128 -a 0.02 -nbits 20 -c 8 -ntests 5 -f "gini"
+python3 preview.py -n 100 -e 1.0 -b 128 -p 5 -nbits 20 -c 8 -ntests 5 -f "gini"
 ```
 
 ## Launch individual Python function

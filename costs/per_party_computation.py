@@ -3,12 +3,12 @@ import math
 from costs.utils import JL_dim, r
 
 
-def Umpc_comp(n, alpha, nbits, kernel="gini", security_lambda=128) -> int:
+def Umpc_comp(n, p, nbits, kernel="gini", security_lambda=128) -> int:
     """
     Returns the number of operations per party necessary to complete Umpc protocol
     
     :param int n: Number of parties
-    :param float alpha: Fraction of neighbors per party in protocol Umpc
+    :param int p: Number of neighbors per party in protocol Umpc
     :param int nbits: Number of bits to represent one element
     :param str kernel: Name of the kernel function to consider
     :param int security_lambda: Security parameter for FSS
@@ -17,11 +17,11 @@ def Umpc_comp(n, alpha, nbits, kernel="gini", security_lambda=128) -> int:
     """
     # Sharing phase + Noise addition phase + Computation phase
     if kernel == "gini":
-        return 2*nbits*int(n * alpha) + n + nbits * security_lambda
+        return int(2*nbits*p + n + nbits * security_lambda)
     elif kernel =="kendall":
-        return 2*nbits*int(n * alpha) + n + 2 * nbits * security_lambda
+        return int(2*nbits*p + n + 2 * nbits * security_lambda)
     elif kernel == "duplicate":
-        return 2*nbits*int(n * alpha) + n + nbits * security_lambda
+        return int(2*nbits*p + n + nbits * security_lambda)
 
 def Bell_comp(bins) -> int:
     """
