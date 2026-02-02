@@ -83,7 +83,7 @@ def communication_computation(
         n=4521,
         t=[2**4, 2**8, 2**12, 2**16, 2**24, 2**28, 2**32],
         nbits=40,
-        p=5
+        p=2
 ) -> None:
     """
     Figure 3 of the paper
@@ -152,7 +152,7 @@ def communication_server_computation(
         bins = 256,
         eps=1,
         nbits=40,
-        p=5
+        p=2
         ) -> None:
     """
     Figure 2 of the paper
@@ -207,7 +207,7 @@ def mse_mse_vs_comm(
         infile="results/kendall.txt",
         epsilons=[0.1, 1.0],
         nbits=40,
-        p=5
+        p=2
         ) -> None:
     """
     Figure 5 of the paper
@@ -417,4 +417,5 @@ def four_plots(
 
 
 if __name__ == "__main__":
-    four_plots(infile="results/kendall_appendix.txt", kernel="kendall")
+    #four_plots(infile="results/duplicate_appendix.txt", kernel="duplicate")
+    communication_mse_per_party()

@@ -31,9 +31,10 @@ def Umpc_comm(n, p, nbits, kernel="gini") -> int:
     # This corresponds to the bits for:
     # - the Sharing Phase (alpha * n^2),
     # - the Aggregation phase (n * nbits),
-    # - the Noise addition phase (nbits * n^2) implemented via the Protocol B.1
-    
-    bits = (p * n + n) * nbits + nbits * n**2 
+    # - the Noise addition phase (nbits * n) implemented via the Protocol B.1 in Honest Majority
+    # setting
+
+    bits = (p * n + n) * nbits + nbits * n
 
     if kernel == "gini":
         # For Gini Mean Difference, 1 product, 1 comparisons = 3 opens
