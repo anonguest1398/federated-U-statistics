@@ -73,7 +73,7 @@ def gini_main(n_parties=[15, 20, 25, 30, 100, 1000, 5000, 7000],
                     bell = bell_method(n, bins, data, r, epsilon, funct)
                     gh, L, R, m, ll = ghazi(n, epsilon, data, r, bins, funct)
                     gh_shuffle = ghazi_shuffle(n, epsilon, data, bins, L, R, m, ll)
-                    our20 = ours_balanced(n, int(0.02 * comb(n, 2)), data, epsilon, funct, l, c, secret_shared)
+                    our20 = ours_balanced(n, 2*n, data, epsilon, funct, l, c, secret_shared)
 
                     f.write(f"{epsilon}\t{n}\t{(real - our20)**2}\t{(real - bell)**2}\t{(real - gh)**2}\t{(real - gh_shuffle)**2}\n")
 
@@ -127,7 +127,7 @@ def MSE_kendall(data,
                     bell = kendall_bell(n, t, data, r, epsilon, funct)
                     gh, L, R, m, ll = kendall_ghazi(n, epsilon, data, r, t, funct)
                     gh_shuffle = kendall_ghazi_shuffle(n, epsilon, data, t, L, R, m, ll)
-                    our_ = ours_balanced(n, int(0.02 * comb(n, 2)), data, epsilon, funct, l, c, secret_shared=False)
+                    our_ = ours_balanced(n, 2*n, data, epsilon, funct, l, c, secret_shared=False)
 
                     f.write(f"{epsilon}\t{n}\t{t**2}\t{(real - our_)**2}\t{(real - bell)**2}\t{(real - gh)**2}\t{(real - gh_shuffle)**2}\n")
 
