@@ -180,7 +180,7 @@ def compare_sampling_main(data,
                     f.write(f"{(real - wo)**2}\t")
                     
                 for eps in epsilons:
-                    bern = ours_bernoulli(n, size_E, data, eps, funct)
+                    bern = ours_bernoulli(n, ratio, data, eps, funct)
                     f.write(f"{(real - bern)**2}\t")
                 
                 f.write("\n")

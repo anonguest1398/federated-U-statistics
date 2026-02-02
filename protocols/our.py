@@ -129,7 +129,6 @@ def ours_wo_repl(n: int, size_e: int, data, epsilon: float, funct, l=40, c=14) -
 
     r = range(n)
     res = 0
-    cpt = 0
 
     # To compute \delta_G^{max}
     max_table = np.zeros(n)
@@ -141,9 +140,6 @@ def ours_wo_repl(n: int, size_e: int, data, epsilon: float, funct, l=40, c=14) -
 
         max_table[i] += 1
         max_table[j] += 1
-
-        if cpt > size_e:
-            break
 
     noise = convert(np.random.laplace(0, max(max_table) / epsilon), c)
 
@@ -179,7 +175,7 @@ def ours_bernoulli(n: int, alpha: float, data, epsilon: float, funct, l=40, c=14
     for (i, j) in comb:
         r = random.random()
         if r < alpha:
-            cpt =+ 1
+            cpt += 1
             res += convert(funct(data[i], data[j]), c)
 
             max_table[i] += 1
